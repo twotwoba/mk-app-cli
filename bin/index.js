@@ -8,6 +8,20 @@ import ora from 'ora'
 import figlet from 'figlet'
 import path from 'path'
 import { exec } from 'child_process'
+import { confirm, input, select } from '@inquirer/prompts'
+import {
+  execAsync,
+  removeTrailingNewline,
+  fsRemoveProject,
+  shRemoveProject,
+  copyFile,
+  removeFile,
+  appendFile,
+  getLocalFilePath,
+  getShellFilePath,
+  readFile,
+  writeFile
+} from '../src/util.js'
 
 const spinner = ora()
 const pkg = fs.readJSONSync(new URL('../package.json', import.meta.url))
@@ -24,10 +38,38 @@ program
   .command('web')
   .description('Create a web app by vite-template-lite')
   .argument('<app name>', 'project name')
-  .action((appName, options) => {
+  .action(async (appName, options) => {
+    if (!checkAppName(appName)) return
     type = 'web'
-    const config = {}
-    createProject(appName, config, options)
+    const basicPkgInfo = await getBasicPkgInfo()
+    // const needAxios = await confirm({ message: 'use axios?', default: true })
+    const useMicroFrontEnd = await confirm({ message: 'use micro front-end?', default: true })
+    let microAppType
+    let port
+    if (useMicroFrontEnd) {
+      microAppType = await select({
+        message: 'Choose whether to create a main app or a sub app',
+        choices: [
+          {
+            name: 'Main Application',
+            value: 'main'
+          },
+          {
+            name: 'Sub Application',
+            value: 'sub'
+          }
+        ]
+      })
+      if (microAppType === 'sub') {
+        port = await input({
+          message: 'customize sub application devServe port',
+          default: '7789'
+        })
+      }
+    }
+    // const config = { needAxios, microAppType, port, ...basicPkgInfo }
+    const config = { microAppType, port, ...basicPkgInfo }
+    createProject(config, options)
   })
 
 // TODO
@@ -36,15 +78,16 @@ program
   .description('Create a desktop application by tauri template')
   .argument('<app name>', 'project name')
   .action((appName, options) => {
+    if (!checkAppName(appName)) return
     type = 'app'
     const config = {}
-    createProject(appName, config, options)
+
+    createProject(config, options)
   })
 
 program.parse(process.argv)
 
-function createProject(appName, config, options) {
-  checkAppName(appName)
+function createProject(config, options) {
   if (!projectPath) return
   createRootDir()
   downloadTemplate(
@@ -61,24 +104,26 @@ function checkAppName(appName) {
     return false
   }
   const pathname = path.join(process.cwd(), appName)
-  const targetPathOk = fs.pathExistsSync(pathname)
-  if (targetPathOk) {
+  if (fs.existsSync(pathname)) {
     console.log(`Error: The directory ${chalk.redBright(pathname)} already exists`)
     return false
   } else {
     projectName = appName
     projectPath = pathname
+    return true
   }
 }
 
-async function createWeb(confg, options) {
+async function createWeb(config, options) {
   const pkg = fs.readJSONSync('./package.json')
   pkg.name = projectName
-  pkg.description = ''
-  pkg.author = ''
-  pkg.version = ''
+  pkg.description = config.description || 'A react app.'
+  pkg.author = config.author || ''
+  pkg.version = config.version || '0.0.1'
   pkg.keywords = []
   delete pkg.license
+  if (config.needAxios) await useAxios(pkg)
+  if (config.microAppType) await useMicroFrontEnd(config.microAppType, config.port, pkg)
   await fs.outputFile(path.join(process.cwd(), 'package.json'), JSON.stringify(pkg, null, 4))
 }
 
@@ -105,7 +150,7 @@ function downloadTemplate(callback) {
       console.log(`\n\n${chalk.redBright('download template failed:')} \n`)
       spinner.stop()
       console.log(error)
-      shRemoveProject()
+      shRemoveProject(projectPath)
     } else {
       exec('rm -rf .git && git init')
       spinner.succeed('The template was downloaded successfully')
@@ -124,22 +169,77 @@ function sayHi() {
   console.log(`pnpm run dev\n`)
 }
 
-function fsRemoveProject() {
-  fs.rm(projectPath, { recursive: true, force: true })
-}
-function shRemoveProject() {
-  sh.rm('-rf', [projectPath])
-}
-
 process.on('uncaughtException', function (err) {
   spinner.stop()
-  fsRemoveProject()
+  fsRemoveProject(projectPath)
   console.log('Caught exception: ', err)
 })
 
 process.on('SIGINT', function () {
   spinner.stop()
   console.log('Received SIGINT signal. Exiting...')
-  shRemoveProject()
+  shRemoveProject(projectPath)
   process.exit(0)
 })
+
+async function getBasicPkgInfo() {
+  const author = await input({ message: "what's your package author", default: '' })
+  const version = await input({ message: "what's your package version", default: '0.0.1' })
+  // const description = await input({ message: "what's your package description", default: '' })
+  // ...
+  return { author, version }
+}
+
+async function useMicroFrontEnd(appType, port, pkg) {
+  if (appType === 'main') {
+    const version = await execAsync('npm view @micro-zoe/micro-app version')
+    pkg.dependencies['@micro-zoe/micro-app'] = removeTrailingNewline(`^${version}`)
+
+    await removeFile(getShellFilePath('src', 'main.tsx'))
+    await copyFile(
+      getLocalFilePath('../src/template/main/main.tsx'),
+      getShellFilePath('src', 'main.tsx')
+    )
+    await removeFile(getShellFilePath('src', 'App.tsx'))
+    await copyFile(
+      getLocalFilePath('../src/template/main/App.tsx'),
+      getShellFilePath('src', 'App.tsx')
+    )
+    const microAppStyle = `
+micro-app {
+    height: 100%;
+}
+`
+    await appendFile(getShellFilePath('src', 'style', 'preset.css'), microAppStyle)
+  } else {
+    const microAppDTS = `
+interface Window {
+    __MICRO_APP_BASE_ROUTE__: string
+    unmount: () => void
+    microApp: { dispatch: (data: { [key: string]: any }) => void }
+}
+`
+    await removeFile(getShellFilePath('src', 'main.tsx'))
+    await copyFile(
+      getLocalFilePath('../src/template/sub/main.tsx'),
+      getShellFilePath('src', 'main.tsx')
+    )
+    await removeFile(getShellFilePath('vite.config.ts'))
+    await copyFile(
+      getLocalFilePath('../src/template/sub/vite.config.ts'),
+      getShellFilePath('vite.config.ts')
+    )
+    if (port) await changeSubAppPort(port)
+    await appendFile(getShellFilePath('src', 'types', 'global.d.ts'), microAppDTS)
+  }
+}
+async function useAxios(pkg) {
+  const version = await execAsync('npm view axios version')
+  pkg.dependencies.axios = removeTrailingNewline(`^${version}`)
+}
+
+async function changeSubAppPort(port) {
+  const fileData = await readFile(getShellFilePath('vite.config.ts'))
+  const newFileData = fileData.toString().replace('7789', port)
+  writeFile(getShellFilePath('vite.config.ts'), newFileData)
+}

@@ -12,11 +12,11 @@
     "react",
     "vite",
     "cli",
-    "tauri",
     "tailwindcss",
     "zustand",
     "web",
-    "app"
+    "app",
+    "tauri"
   ],
   "repository": {
     "type": "git",
@@ -36,5 +36,11 @@
     "ora": "^8.0.1",
     "shelljs": "^0.8.5",
     "validate-npm-package-name": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "@types/fs-extra": "^11.0.4",
+    "@types/shelljs": "^0.8.15",
+    "@types/validate-npm-package-name": "^4.0.2"
   }
 }
