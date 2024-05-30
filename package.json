@@ -1,6 +1,6 @@
 {
   "name": "@ericyuanovo/mk-app-cli",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Easily create vite-react web app or tauri app",
   "main": "index.js",
   "type": "module",
