@@ -197,12 +197,12 @@ async function useMicroFrontEnd(appType, port, pkg) {
 
     await removeFile(getShellFilePath('src', 'main.tsx'))
     await copyFile(
-      getLocalFilePath('../src/template/main/main.tsx'),
+      path.join(__dirname, path, '../src/template/main/main.tsx'),
       getShellFilePath('src', 'main.tsx')
     )
     await removeFile(getShellFilePath('src', 'App.tsx'))
     await copyFile(
-      getLocalFilePath('../src/template/main/App.tsx'),
+      path.join(__dirname, path, '../src/template/main/App.tsx'),
       getShellFilePath('src', 'App.tsx')
     )
     const microAppStyle = `
