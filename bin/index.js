@@ -22,6 +22,11 @@ import {
   readFile,
   writeFile
 } from '../src/util.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const spinner = ora()
 const pkg = fs.readJSONSync(new URL('../package.json', import.meta.url))
@@ -197,12 +202,12 @@ async function useMicroFrontEnd(appType, port, pkg) {
 
     await removeFile(getShellFilePath('src', 'main.tsx'))
     await copyFile(
-      path.join(__dirname, path, '../src/template/main/main.tsx'),
+      path.join(__dirname, '../src/template/main/main.tsx'),
       getShellFilePath('src', 'main.tsx')
     )
     await removeFile(getShellFilePath('src', 'App.tsx'))
     await copyFile(
-      path.join(__dirname, path, '../src/template/main/App.tsx'),
+      path.join(__dirname, '../src/template/main/App.tsx'),
       getShellFilePath('src', 'App.tsx')
     )
     const microAppStyle = `
