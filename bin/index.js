@@ -17,7 +17,6 @@ import {
   copyFile,
   removeFile,
   appendFile,
-  getLocalFilePath,
   getShellFilePath,
   readFile,
   writeFile
@@ -226,12 +225,12 @@ interface Window {
 `
     await removeFile(getShellFilePath('src', 'main.tsx'))
     await copyFile(
-      getLocalFilePath('../src/template/sub/main.tsx'),
+      path.join(__dirname, '../src/template/sub/main.tsx'),
       getShellFilePath('src', 'main.tsx')
     )
     await removeFile(getShellFilePath('vite.config.ts'))
     await copyFile(
-      getLocalFilePath('../src/template/sub/vite.config.ts'),
+      path.join(__dirname, '../src/template/sub/vite.config.ts'),
       getShellFilePath('vite.config.ts')
     )
     if (port) await changeSubAppPort(port)
