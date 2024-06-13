@@ -76,7 +76,7 @@ program
     createProject(config, options)
   })
 
-// TODO
+/**
 program
   .command('app')
   .description('Create a desktop application by tauri template')
@@ -88,6 +88,7 @@ program
 
     createProject(config, options)
   })
+*/
 
 program.parse(process.argv)
 

@@ -1,6 +1,6 @@
 # mk-app-cli
 
-Easily create vite-react web app or tauri app
+Easily create vite-react web app.
 
 ## install
 
@@ -27,11 +27,9 @@ Today，the `vite-plugin-qiankun` has no more updated for almost 2 years,so I ch
 
 [Here is Micro-app document.](https://micro-zoe.github.io/micro-app/)
 
-## Create a desktop app by tauri template
+---
 
-TODO
-
-## TODO
+## TODO list
 
 - [x] support micro front-end - Micro-App
-- [ ] tauri app template
+- [ ] use axios
