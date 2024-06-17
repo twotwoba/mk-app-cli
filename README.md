@@ -28,8 +28,3 @@ Today，the `vite-plugin-qiankun` has no more updated for almost 2 years,so I ch
 [Here is Micro-app document.](https://micro-zoe.github.io/micro-app/)
 
 ---
-
-## TODO list
-
-- [x] support micro front-end - Micro-App
-- [ ] use axios
