@@ -1,46 +1,44 @@
 {
-  "name": "@ericyuanovo/mk-app-cli",
-  "version": "1.1.5",
-  "description": "Easily create vite-react web app or tauri app",
-  "main": "index.js",
-  "type": "module",
-  "bin": {
-    "mk": "bin/index.js"
-  },
-  "scripts": {},
-  "keywords": [
-    "react",
-    "vite",
-    "cli",
-    "tailwindcss",
-    "zustand",
-    "web",
-    "app",
-    "tauri"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yokiizx/mk-app-cli.git"
-  },
-  "engines": {
-    "node": ">=16"
-  },
-  "author": "ericyuan",
-  "license": "MIT",
-  "dependencies": {
-    "@inquirer/prompts": "^5.0.3",
-    "chalk": "^5.3.0",
-    "commander": "^12.0.0",
-    "figlet": "^1.7.0",
-    "fs-extra": "^11.2.0",
-    "ora": "^8.0.1",
-    "shelljs": "^0.8.5",
-    "validate-npm-package-name": "^5.0.1"
-  },
-  "devDependencies": {
-    "@types/figlet": "^1.5.8",
-    "@types/fs-extra": "^11.0.4",
-    "@types/shelljs": "^0.8.15",
-    "@types/validate-npm-package-name": "^4.0.2"
-  }
+    "name": "@ericyuanovo/mk-app-cli",
+    "version": "1.1.5",
+    "description": "Easily create vite-react web app or tauri app",
+    "main": "index.js",
+    "type": "module",
+    "bin": {
+        "mk": "bin/index.js"
+    },
+    "scripts": {},
+    "keywords": [
+        "cli",
+        "vite",
+        "react",
+        "tailwindcss",
+        "zustand",
+        "web"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/twotwoba/mk-app-cli.git"
+    },
+    "engines": {
+        "node": ">=16"
+    },
+    "author": "ericyuan",
+    "license": "MIT",
+    "dependencies": {
+        "@inquirer/prompts": "^5.0.3",
+        "chalk": "^5.3.0",
+        "commander": "^12.0.0",
+        "figlet": "^1.7.0",
+        "fs-extra": "^11.2.0",
+        "ora": "^8.0.1",
+        "shelljs": "^0.8.5",
+        "validate-npm-package-name": "^5.0.1"
+    },
+    "devDependencies": {
+        "@types/figlet": "^1.5.8",
+        "@types/fs-extra": "^11.0.4",
+        "@types/shelljs": "^0.8.15",
+        "@types/validate-npm-package-name": "^4.0.2"
+    }
 }
