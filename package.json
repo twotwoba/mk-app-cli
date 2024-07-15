@@ -1,6 +1,6 @@
 {
     "name": "@twotwoba/mk-app-cli",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "description": "Easily create a vite-react web app",
     "main": "index.js",
     "type": "module",
