@@ -1,7 +1,7 @@
 {
     "name": "@twotwoba/mk-app-cli",
     "version": "1.1.7",
-    "description": "Easily create vite-react web app or tauri app",
+    "description": "Easily create a vite-react web app",
     "main": "index.js",
     "type": "module",
     "bin": {

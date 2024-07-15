@@ -10,7 +10,7 @@ Support:
 ## install
 
 ```sh
-npm i @ericyuanovo/mk-app-cli -g
+npm i @twotwoba/mk-app-cli -g
 ```
 
 ## Usage
