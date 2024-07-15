@@ -23,6 +23,9 @@
     "engines": {
         "node": ">=16"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "author": "ericyuan",
     "license": "MIT",
     "dependencies": {
